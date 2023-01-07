@@ -11,6 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var messages = [];
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -37,7 +38,7 @@ var requestHandler = function(request, response) {
   // The outgoing status.
 
   // See the note below about CORS headers
-  var headers = defaultCorsHeaders;
+var headers = defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
   //
@@ -47,24 +48,29 @@ var requestHandler = function(request, response) {
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
+
+
   if (request.method === 'GET' && request.url === '/classes/messages') {
     response.writeHead(statusCode, {'Content-Type': 'application/json'})
-    response.write(JSON.stringify([{
-      data: 'text'
-    }]))
-    response.end()
+    // response.write(JSON.stringify(messages))
+    response.end(JSON.stringify(messages))
   }
 
   if (request.method === 'POST' && request.url === '/classes/messages') {
     response.writeHead(201, {'Content-Type': 'application/json'})
-    // let body = [];
-    // request.on('data', (chunk) => {
-    //   body.push(chunk);
-    // }).on('end', () => {
-    //   body = Buffer.concat(body).toString();
-    //   response.end(`[${body}]`);
-    // })
-    response.end()
+    let body = '';
+    request.on('data', (chunk) => {
+      body += chunk;
+    }).on('end', () => {
+      body = JSON.parse(body);
+      // body = Buffer.concat(body).toString();
+      // messages.push(body)
+      // response.end(`[${body}]`);
+      messages.push(body);
+
+      response.end(JSON.stringify(messages))
+    })
+    // response.end()
   }
 
   if (request.url !== '/classes/messages') {

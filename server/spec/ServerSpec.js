@@ -45,7 +45,6 @@ describe('Node Server Request Listener Function', function() {
     };
     var req = new stubs.request('/classes/messages', 'POST', stubMsg);
     var res = new stubs.response();
-    debugger;
     handler.requestHandler(req, res);
 
     // Expect 201 Created response status
@@ -65,6 +64,7 @@ describe('Node Server Request Listener Function', function() {
     var req = new stubs.request('/classes/messages', 'POST', stubMsg);
     var res = new stubs.response();
 
+    // debugger
     handler.requestHandler(req, res);
 
     expect(res._responseCode).to.equal(201);
@@ -73,9 +73,11 @@ describe('Node Server Request Listener Function', function() {
     req = new stubs.request('/classes/messages', 'GET');
     res = new stubs.response();
 
+    // debugger
     handler.requestHandler(req, res);
 
     expect(res._responseCode).to.equal(200);
+    // debugger
     var messages = JSON.parse(res._data);
     expect(messages.length).to.be.above(0);
     expect(messages[0].username).to.equal('Jono');
