@@ -1,3 +1,5 @@
+let handleRequest = require('./request-handler.js')
+
 /* Import node's http module: */
 var http = require('http');
 
@@ -22,17 +24,17 @@ var ip = '127.0.0.1';
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-var server = http.createServer(handleRequest);
+var server = http.createServer(handleRequest.requestHandler);
 console.log('Listening on http://' + ip + ':' + port);
 server.listen(port, ip);
 
 // To start this server, run:
-//
+//http://127.0.0.1:3000
 //   node basic-server.js
 //
 // on the command line.
 //
-// To connect to the server, load http://127.0.0.1:3000 in your web
+// To connect to the server, load  in your web
 // browser.
 //
 // server.listen() will continue running as long as there is the
