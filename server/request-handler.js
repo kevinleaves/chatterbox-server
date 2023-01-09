@@ -29,6 +29,7 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
 
+
   var statusCode = 200;
 
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
@@ -50,14 +51,21 @@ var headers = defaultCorsHeaders;
   // which includes the status and all headers.
 
 
+  // if req method is OPTIONS
+  if (request.method === 'OPTIONS' && request.url === '/classes/messages') {
+    // edit response header, gives back 200,
+    response.writeHead(statusCode, headers)
+    response.end()
+  }
+
   if (request.method === 'GET' && request.url === '/classes/messages') {
-    response.writeHead(statusCode, {'Content-Type': 'application/json'})
+    response.writeHead(statusCode, headers)
     // response.write(JSON.stringify(messages))
     response.end(JSON.stringify(messages))
   }
 
   if (request.method === 'POST' && request.url === '/classes/messages') {
-    response.writeHead(201, {'Content-Type': 'application/json'})
+    response.writeHead(201, headers)
     let body = '';
     request.on('data', (chunk) => {
       body += chunk;
@@ -68,14 +76,19 @@ var headers = defaultCorsHeaders;
       // response.end(`[${body}]`);
       messages.push(body);
 
-      response.end(JSON.stringify(messages))
+      response.end(JSON.stringify(body))
     })
     // response.end()
   }
 
   if (request.url !== '/classes/messages') {
     response.writeHead(404, {'Content-Type': 'text/plain'})
-    response.end('ERROR, INVALID URL')
+    response.end('Error. Invalid URL')
+  }
+
+  if (request.method === 'PUT' || request.method === 'DELETE') {
+    response.writeHead(404, {'Content-Type': 'text/plain'})
+    response.end('Invalid Response')
   }
   // response.writeHead(statusCode, headers);
 
